@@ -1,3 +1,4 @@
+//import processing.opengl.*; 
 //import the math libraries required
 import toxi.math.*;
 import toxi.math.waves.*;
@@ -23,6 +24,7 @@ AudioBuffer buffer;
 AudioSource source;
 
 void setup(){
+  smooth();
   //create the canvas
   size(768, 480);
   background(0);
@@ -42,6 +44,7 @@ void setup(){
 void draw(){  
   //send the state information to the wave processors
   samples = waves.Process(spad.SceneState(step));
+  //samples = waves.Sample();
   // convert raw signal into JOAL 16bit stereo buffer
   buffer=SynthUtil.floatArrayTo16bitStereoBuffer(audio,samples,SAMPLE_FREQ);
   // create a sound source, enable looping & play it
@@ -51,6 +54,18 @@ void draw(){
   source.play();   
   //if the current step is less than the max, then increment, otherwise reset 
   step = (step < max_steps-1) ? step+1 : 0;
+  Render(samples);
+}
+
+void Render(float[] samples){
+  noStroke();
+  background(0);
+  fill(100);
+  float val = 0, e_size;
+  for (int i=samples.length-1;i>0;i-=100)
+    val += samples[i];
+  e_size = val * 100;
+  ellipse(width/2+random(0, 10), height/2+random(0, 10), e_size, e_size);
 }
 
 void launchpadButtonPressed(int buttonCode){
