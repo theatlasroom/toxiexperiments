@@ -50,7 +50,7 @@ void draw(){
   //source.setLooping(true);
   source.play();   
   //if the current step is less than the max, then increment, otherwise reset 
-  step = (step < max_steps) ? step+1 : 0;
+  step = (step < max_steps-1) ? step+1 : 0;
 }
 
 void launchpadButtonPressed(int buttonCode){
