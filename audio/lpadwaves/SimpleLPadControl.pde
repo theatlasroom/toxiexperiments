@@ -8,6 +8,7 @@ class SimpleLPadControl {
   private byte[][] grid_state;  
   private final byte GRID_OFF=0, GRID_ON=1;
   private final int BUTTON_OFF = LColor.OFF, BUTTON_ON = LColor.GREEN_HIGH, SCENE_ON = LColor.YELLOW_HIGH, SEQ_SCENE = 0;
+  private boolean[] scene_states;
   private Launchpad pad;  
   
   SimpleLPadControl(Launchpad pad){
@@ -23,10 +24,9 @@ class SimpleLPadControl {
   public boolean[] SceneState(int index){
     //returns the state of each scene at the given index
     //basically returns true or false to say if there is a light at the specified grid cell for each scene
-    boolean[] res = new boolean[this.scenes];
     for (int i=this.scenes-1;i>0;i--)
-      res[i] = (this.grid_state[this.curr_scene][index] == 0) ? false : true;
-    return res;
+      scene_states[i] = (this.grid_state[this.curr_scene][index] == 0) ? false : true;
+    return scene_states;
   }
   
   public void ToggleGrid(int x, int y){    
@@ -88,7 +88,8 @@ class SimpleLPadControl {
         grid_state[i][j] = GRID_OFF;
       }
     }
-    this.ChangeScene(LButton.SCENE1);  //set the current scene to the initial scene    
+    this.ChangeScene(LButton.SCENE1);  //set the current scene to the initial scene
+    scene_states = new boolean[this.scenes];
   }
   
   private int SceneNum(int scene) {

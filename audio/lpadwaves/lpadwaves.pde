@@ -40,8 +40,8 @@ void setup(){
 }
 
 void draw(){  
-  boolean[] state = spad.SceneState(step);  
-  samples = waves.Process(state);
+  //send the state information to the wave processors
+  samples = waves.Process(spad.SceneState(step));
   // convert raw signal into JOAL 16bit stereo buffer
   buffer=SynthUtil.floatArrayTo16bitStereoBuffer(audio,samples,SAMPLE_FREQ);
   // create a sound source, enable looping & play it

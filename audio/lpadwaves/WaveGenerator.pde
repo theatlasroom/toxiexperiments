@@ -4,7 +4,9 @@ class WaveGenerator {
   AbstractWave[] osc;
   int num_osc = 8;  //4 oscillators will be used
   int min_sample_len = 2;   //default the sample buffer to 2 x the numb
-  int SAMPLE_FREQ = 44100;  //set the default sampling frequency to 44100 
+  int SAMPLE_FREQ = 44100;  //set the default sampling frequency to 44100
+  float sample_data[]; 
+  int sample_data_len;  
   //this class will generate the waves
   //it will contain functions to process the waves into audio and video
   public WaveGenerator(){
@@ -18,17 +20,14 @@ class WaveGenerator {
   public float[] Process(boolean[] osc_state){
     //take the index and update only oscillators that are active
     //this function populates a sample array and returns it
-    //the sample length determines how long the sound will play for (in seconds)
-    int len = (int)(this.SAMPLE_FREQ * this.min_sample_len);
-    float sample[] = new float[len];
-    //println("sample len " + len);
-    for (int i=0;i<len;i+=this.num_osc){
+    //the sample length determines how long the sound will play for (in seconds)  
+    for (int i=0;i<this.sample_data_len;i+=this.num_osc){
       for(int j=0;j<this.num_osc;j++){
         //if the oscillator state is true, then update, otherwise set it to 0
-        sample[i+j] = (osc_state[j]) ? osc[j].update() : 0;          
+        this.sample_data[i+j] = (osc_state[j]) ? osc[j].update() : 0;          
       }
     } 
-    return sample;    
+    return this.sample_data;    
   }
   
     
@@ -40,16 +39,12 @@ class WaveGenerator {
   
   public float[] Sample(float sample_length){   
     //this function populates a sample array and returns it
-    //the sample length determines how long the sound will play for (in seconds)
-    int len = (int)(this.SAMPLE_FREQ * sample_length);
-    float sample[] = new float[len];
-    //println("sample len " + len);
-    for (int i=0;i<len;i+=this.num_osc){
+    for (int i=0;i<this.sample_data_len;i+=this.num_osc){
       for(int j=0;j<this.num_osc;j++){
-        sample[i+j] = osc[j].update();
+        this.sample_data[i+j] = osc[j].update();
       }
     } 
-    return sample;
+    return this.sample_data;
   }
   
   public AbstractWave Sine(float freq){
@@ -68,14 +63,16 @@ class WaveGenerator {
       freq = (int)random(min_freq, max_freq);  //generate a random frequency
       osc[i] = this.Sine(freq);  //new sine wave with freq 1
       osc[i+1] = this.Sine(freq/2);//new sine wave with freq 2
-    }
+    }    
   }
 
   //private members / utils
   private void init(int sample_freq, int num_osc){
     this.SAMPLE_FREQ = sample_freq;   
     this.num_osc = num_osc;
-    this.min_sample_len = (int)this.num_osc/2;    
+    this.min_sample_len = (int)this.num_osc/2; 
+    this.sample_data_len = (int)(this.SAMPLE_FREQ * this.min_sample_len);    
+    this.sample_data = new float[this.sample_data_len];    
     this.initOsc();  //initialize the oscillators
   }
 }
