@@ -14,6 +14,20 @@ class SimpleLPadControl {
     this.pad = pad;   
     this.init();
   }
+
+  public boolean[] SceneState(int x, int y){
+    int index = this.GridIndex(x,y);
+    return this.SceneState(index);
+  }
+  
+  public boolean[] SceneState(int index){
+    //returns the state of each scene at the given index
+    //basically returns true or false to say if there is a light at the specified grid cell for each scene
+    boolean[] res = new boolean[this.scenes];
+    for (int i=this.scenes-1;i>0;i--)
+      res[i] = (this.grid_state[this.curr_scene][index] == 0) ? false : true;
+    return res;
+  }
   
   public void ToggleGrid(int x, int y){    
     //toggle the state of the grid cell
@@ -42,6 +56,8 @@ class SimpleLPadControl {
   //simple getters
   public int GridIndex(int x, int y){return 8*y+x;}  //calculate the single grid index for the xy coords passed in
   public int CurrentScene() {return this.curr_scene;} //returns the current scene
+  public boolean isGridActive(int x, int y){return (this.GridState(x,y) == 0) ? false : true;}  //reutns a true or false indicator if to indicate if this grid cell is active
+  private int GridState(int x, int y){return this.grid_state[this.curr_scene][this.GridIndex(x, y)];} 
   
   //public utils
   public void ResetGrid(){

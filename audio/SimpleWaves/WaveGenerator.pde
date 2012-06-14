@@ -25,6 +25,7 @@ class WaveGenerator {
     //this function populates a sample array and returns it
     //the sample length determines how long the sound will play for (in seconds)
     int len = (int)(this.SAMPLE_FREQ * sample_length);
+    //println("len is: " + len);
     float sample[] = new float[len];
     for (int i=0;i<len;i+=this.num_osc){
       for(int j=0;j<this.num_osc;j++){
@@ -43,14 +44,16 @@ class WaveGenerator {
   }
   
   public void initOsc(){
-    int freq = 0, freq_inc = (int)random(100), min_freq = 40;  
-    osc = new AbstractWave[this.num_osc];  //initialize the osc array
+    int freq = 0, freq_inc = (int)random(20), min_freq=10, max_freq=1000;  
+    osc = new AbstractWave[this.num_osc*2];  //initialize the osc array
+                                             //create double the amount to account for L/R
     println("Creating " + this.num_osc + " oscillators");
-    for (int i=0;i<this.num_osc;i+=2){
-      freq = (int)random(10, min_freq);  //generate a random frequency
+    for (int i=0;i<this.num_osc;i++){
+      freq = (int)random(min_freq, max_freq);  //generate a random frequency
       osc[i] = this.Sine(freq);  //new sine wave with freq 1
-      osc[i+1] = this.Sine(freq+random(5));//new sine wave with freq 2
+      osc[i+1] = this.Sine(freq+1);//new sine wave with freq 2
       min_freq+=freq_inc;
+      println("new freq " + freq);
     }
   }
 

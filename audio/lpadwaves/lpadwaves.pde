@@ -15,7 +15,7 @@ import toxi.audio.*;
 SimpleLPadControl spad;
 WaveGenerator waves;
 //set the sampling frequency
-int SAMPLE_FREQ = 44100;
+int SAMPLE_FREQ = 44100, step = 0, max_steps = 64;
 float[] samples;
 //create the buffer, source and joalutil objects
 JOALUtil audio;
@@ -40,7 +40,8 @@ void setup(){
 }
 
 void draw(){  
-  samples = waves.Sample();
+  boolean[] state = pad.SceneState(step);  
+  samples = waves.Process(test);
   // convert raw signal into JOAL 16bit stereo buffer
   buffer=SynthUtil.floatArrayTo16bitStereoBuffer(audio,samples,SAMPLE_FREQ);
   // create a sound source, enable looping & play it
@@ -48,6 +49,8 @@ void draw(){
   source.setBuffer(buffer);
   //source.setLooping(true);
   source.play();   
+  //if the current step is less than the max, then increment, otherwise reset 
+  step = (step < max_steps) ? step+1 : 0;
 }
 
 void launchpadButtonPressed(int buttonCode){
