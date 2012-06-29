@@ -1,4 +1,3 @@
-import codeanticode.glgraphics.*;
 import processing.opengl.*;
 
 float x = 0, y = 0, new_x, new_y;
@@ -9,7 +8,7 @@ float jittery = 0, jitterx = 0;
 int lower_lim = 0, upper_lim = 360;
 int col_val;
 float r_val, g_val, b_val;
-float bg_col = 255, stroke_col = 0, opacity = 20;
+float bg_col = 0, stroke_col = 255, opacity = 20;
 
 void setup(){
   frameRate(25);
@@ -39,10 +38,6 @@ void ResetLimits(){
   inc = (int)random(-10, 10);
   inc = (inc == 0) ? 1 : inc;
   r=width/4+inc;
-  //if (  
-  //println(lower_lim);
-  //println(upper_lim);  
-  //println(inc);
 }
 
 void CalcNewValues(){
@@ -59,8 +54,33 @@ void UpdateVals(){
 }
 
 void Render(){
+  SetColours();  
   DrawGeometry();
-  ProcessPx();
+  AnalogNoise();
+ // ProcessPx();  
+}
+
+void SetColours(){
+  fill(bg_col, opacity);  
+  stroke(stroke_col);  
+}
+
+void AnalogNoise(){
+  int parts = (int)random(5, 20);
+  fill(stroke_col);
+  float size_shape = 0;
+  for (int i=parts-1;i>0;i--){
+    point(random(width), random(height));
+    size_shape = random(0, 50);
+    if (i%10==0){
+      //need to make jitterable objects that fade out over a few frames
+      //basically objects with a lifetime, and a position, jitter the position each frame
+      //update the internal frame counter in the object, then kill it off when necessary
+      /*noFill(); 
+      ellipse(random(width), random(height), size_shape, size_shape);
+      fill(stroke_col);*/      
+    } 
+  }
 }
 
 void ProcessPx(){
@@ -85,9 +105,11 @@ void Flip(){
   }    
 }
 
-void DrawGeometry(){
+void DrawGeometry(){  
   rect(0,0,width,height);
+  pushMatrix();
   translate(width/2+jitterx, height/2+jittery);  
   //point(x+jittery/4, y+j);  
-  line(x+jittery/4,y,new_x,new_y+jitterx/4);    
+  line(x+jittery/4,y,new_x,new_y+jitterx/4);
+  popMatrix();  
 }
