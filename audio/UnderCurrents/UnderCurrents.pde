@@ -25,7 +25,7 @@ void setup(){
   audio = new AudioAnalyzer(this, dataPath("waves.mp3"), num_bands);
   //create output stream
   b = new BitEncoderDecoder(0.5, num_bands);
-  size(720,720,OPENGL);    
+  size(720,720);    
 }
 
 void draw(){
